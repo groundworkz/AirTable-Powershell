@@ -51,21 +51,28 @@ function Add-AirTableData {
         [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][String]$AirTableTable,
         [Parameter(Mandatory = $true)][ValidateNotNullOrEmpty()][String]$AirTableData
     )
-    Write-Host "Uploading data to Airtable"
-    $AirtableHeaders = @{
-        Authorization = "Bearer $($AirtableAPIKey)"
+    begin {
+        Write-Host "Airtable Add-AirTableData running."
     }
-    try {
-        $Response = Invoke-webrequest -uri "https://api.airtable.com/v0/$($AirtableBase)/$($AirtableTable)" -Headers $AirtableHeaders -Method POST -Body $AirTableData -ContentType application/json -ErrorAction Stop
+    process {
+        $AirtableHeaders = @{
+            Authorization = "Bearer $($AirtableAPIKey)"
+        }
+        try {
+            $Response = Invoke-webrequest -uri "https://api.airtable.com/v0/$($AirtableBase)/$($AirtableTable)" -Headers $AirtableHeaders -Method POST -Body $AirTableData -ContentType application/json -ErrorAction Stop
+        }
+        catch [System.Net.WebException] { 
+            Write-Host $_.Exception.Message -ForegroundColor Red
+        }
     }
-    catch [System.Net.WebException] { 
-        Write-Host $_.Exception.Message -ForegroundColor Red
-    }
-    if ($Response.StatusCode -eq 200) {
-        Return $Response.Content
-    }
-    elseif ($Response.StatusCode) {
-        Write-Host "Error. HTTP Response code: [$($Response.StatusCode)]" -ForegroundColor Red
-        Break
+    end {
+        if ($Response.StatusCode -eq 200) {
+            Write-Host "AirTable data added succesfully"
+            Return $Response.Content
+        }
+        elseif ($Response.StatusCode) {
+            Write-Host "Error. HTTP Response code: [$($Response.StatusCode)]" -ForegroundColor Red
+            Break
+        }
     }
 }
