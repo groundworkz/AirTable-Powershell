@@ -39,7 +39,7 @@
 
  .Example
    # Create a new airtable row
-   Add-AirTableData -AirtableAPIKey "xxxxxxxxx" -AirtableBase "Employees" -AirtableTable "Jobs" -AirtableData "{"records":[{"fields":{"Firstname":"Chris","Surname":"Hill","Job Title":"Astronaut","Status":"In Space"}}]}"
+   Add-AirTableData -AirtableAPIKey "xxxxxxxxx" -AirtableBase "Employees" -AirtableTable "Jobs" -AirtableData '{"records":[{"fields":{"Firstname":"Chris","Surname":"Hill","Job Title":"Astronaut","Status":"In Space"}}]}'
 
 #>
 
